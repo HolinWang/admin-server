@@ -35,7 +35,7 @@ export class UserService {
  
   create() {
     // 风格统一的异常处理
-    throw  new HttpException('自定义异常',HttpStatus.CONFLICT);
+    // throw  new HttpException('自定义异常',HttpStatus.CONFLICT);
     return 'This action adds a new user'+'===这是sharedModule的环境：'+this.systemService.getEnv().env;
   }
 }

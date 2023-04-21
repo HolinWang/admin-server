@@ -3,11 +3,17 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('user')
 @ApiTags("用户管理")
 export class UserController {
-  constructor(private readonly userService:UserService) {}
+  constructor(
+    private readonly userService:UserService,
+
+    // 注入环境变量
+    private readonly configService: ConfigService
+    ) {}
 
 
   @Post()
@@ -19,6 +25,7 @@ export class UserController {
     type:CreateUserDto
   })
   create(@Body() createUserDto: CreateUserDto) {
+    console.log('env:',this.configService.get<string>('database.url'))
     return this.userService.create()
   }
 

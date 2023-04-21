@@ -11,7 +11,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     email:string
 
-    @ApiProperty({example:'8412887'})
+    @ApiProperty({example:'18412887000'})
     @Matches(/^1\d{10}$/g, { message: '请输入手机号' })
     phoneNumber:string
 }

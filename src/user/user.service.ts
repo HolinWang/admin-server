@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { SystemService } from 'src/shared/system.service';
 // import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
@@ -31,7 +31,11 @@ import { SystemService } from 'src/shared/system.service';
 @Injectable()
 export class UserService {
   constructor(private readonly systemService:SystemService){}
+
+ 
   create() {
+    // 风格统一的异常处理
+    throw  new HttpException('自定义异常',HttpStatus.CONFLICT);
     return 'This action adds a new user'+'===这是sharedModule的环境：'+this.systemService.getEnv().env;
   }
 }

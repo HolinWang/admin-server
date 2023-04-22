@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserService } from '../services/user.service';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
@@ -10,12 +10,9 @@ import { ConfigService } from '@nestjs/config';
 export class UserController {
   constructor(
     private readonly userService:UserService,
-
     // 注入环境变量
     private readonly configService: ConfigService
     ) {}
-
-
   @Post()
   @ApiOperation({
     summary:"新增用户"

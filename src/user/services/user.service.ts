@@ -3,6 +3,7 @@ import { SystemService } from 'src/shared/system.service';
 import { MongoRepository } from 'typeorm';
 import { User } from '../entities/user.mongo.entity';
 import { AppLogger } from 'src/shared/logger/logger.service';
+import { PaginaationParamsDto } from 'src/shared/dtos/pagination-params.dto';
 // import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -62,7 +63,17 @@ export class UserService {
     });
   }
 
-  findAll(){
-    return this.userRepository.findAndCount({})
+  async findAll({pageSize,currentPage}:PaginaationParamsDto): Promise<{data:User[],count:number}>{
+
+    const [data, count] = await this.userRepository.findAndCount({
+      order: { _id: 'DESC' },
+      skip: (currentPage - 1) * pageSize,
+      take: (pageSize * 1),
+      cache: true,
+    })
+
+    return {
+      data, count
+    }
   }
 }

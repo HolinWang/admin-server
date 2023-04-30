@@ -1,24 +1,39 @@
-import { Column, CreateDateColumn, ObjectId, ObjectIdColumn, UpdateDateColumn, VersionColumn } from "typeorm";
-
-export abstract class Common{
+import {
+    Column,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+    CreateDateColumn,
+    VersionColumn,
+    ObjectId,
+    ObjectIdColumn
+  } from 'typeorm';
+  
+  export abstract class Common {
+    // // 主键id
+    // @PrimaryGeneratedColumn()
+    // _id: string;
+  
     @ObjectIdColumn()
-    _id:ObjectId
-
+    _id: ObjectId;
+  
+    // 创建时间
     @CreateDateColumn()
-    createdAt:Date
-
+    createdAt: Date
+  
+    // 更新时间
     @UpdateDateColumn()
-    updatedAt:Date
-
+    updatedAt: Date
+  
+    // 软删除
     @Column({
-        default:false
+      default: false,
+      select: false,
     })
-
-    
-    isDeleted:boolean
-
+    isDelete: boolean
+  
+    // 更新次数
     @VersionColumn({
-        select:false
+      select: false
     })
-    version:number
-}
+    version: number
+  }

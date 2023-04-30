@@ -1,79 +1,54 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { SystemService } from 'src/shared/system.service';
+import { Inject, Injectable } from '@nestjs/common';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
+import { SystemService } from '../../shared/system.service';
 import { MongoRepository } from 'typeorm';
 import { User } from '../entities/user.mongo.entity';
 import { AppLogger } from 'src/shared/logger/logger.service';
-import { PaginaationParamsDto } from 'src/shared/dtos/pagination-params.dto';
-// import { CreateUserDto } from './dto/create-user.dto';
-// import { UpdateUserDto } from './dto/update-user.dto';
-
-// 
-// export class UserService {
-//   create(createUserDto: CreateUserDto) {
-//     return 'This action adds a new user';
-//   }
-
-//   findAll() {
-//     return `This action returns all user`;
-//   }
-
-//   findOne(id: number) {
-//     return `This action returns a #${id} user`;
-//   }
-
-//   update(id: number, updateUserDto: UpdateUserDto) {
-//     return `This action updates a #${id} user`;
-//   }
-
-//   remove(id: number) {
-//     return `This action removes a #${id} user`;
-//   }
-// }
-
+import { PaginationParamsDto } from '../../shared/dtos/pagination-params.dto';
 
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly systemService:SystemService,
+  constructor(private readonly systemService: SystemService,
     @Inject('USER_REPOSITORY')
-    private readonly userRepository:MongoRepository<User>,
+    private readonly userRepository: MongoRepository<User>,
     private readonly logger: AppLogger
-    ){
-      // 设置打印日志上下文
-      this.logger.setContext(UserService.name)
-    }
-
- 
-  create() {
-    // 风格统一的异常处理
-    // throw  new HttpException('自定义异常',HttpStatus.CONFLICT);
-
-    // 打印日志
-    this.logger.info(null,'user create',{
-      name: 'info-holin wang'
-    })
-
-    this.logger.debug(null,'user create',{
-      name: 'debug-holin wang'
-    })
-
-    return 'This action adds a new user'+'===这是sharedModule的环境：'+this.systemService.getEnv().env+"===userRepository=="+this.userRepository.save({
-      name:'holin'
-    });
+  ) {
+    this.logger.setContext(UserService.name)
   }
 
-  async findAll({pageSize,currentPage}:PaginaationParamsDto): Promise<{data:User[],count:number}>{
+  create(createUserDto: CreateUserDto) {
+    // 调用Modle
+    // return 'This action adds a 🚀 new user';
+    return this.userRepository.save(createUserDto)
+  }
+
+  async findAll({ pageSize, currentPage }: PaginationParamsDto): Promise<{ data: User[], count: number }> {
 
     const [data, count] = await this.userRepository.findAndCount({
-      order: { _id: 'DESC' },
+      order: { name: 'DESC' },
       skip: (currentPage - 1) * pageSize,
       take: (pageSize * 1),
-      cache: true,
+      cache: true
     })
 
+    // 100 => 第二页 5 6-10
     return {
       data, count
     }
+  }
+
+  async findOne(id: string) {
+    return await this.userRepository.findOneBy(id)
+
+  }
+
+  async update(id: string, user: CreateUserDto) {
+    return await this.userRepository.update(id, user)
+  }
+
+  async remove(id: string): Promise<any> {
+    return await this.userRepository.delete(id)
   }
 }

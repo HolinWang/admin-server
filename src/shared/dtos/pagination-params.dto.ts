@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { IsNumber, IsOptional, Min } from "class-validator";
 import { Transform } from "class-transformer";
-export class PaginaationParamsDto {
+export class PaginationParamsDto {
 
     @ApiPropertyOptional({
         description:'Current Page Size',

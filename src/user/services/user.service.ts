@@ -6,6 +6,7 @@ import { MongoRepository } from 'typeorm';
 import { User } from '../entities/user.mongo.entity';
 import { AppLogger } from 'src/shared/logger/logger.service';
 import { PaginationParamsDto } from '../../shared/dtos/pagination-params.dto';
+import { encryptoPassword, makeSalt } from 'src/utils/crypto.util';
 
 
 @Injectable()
@@ -18,10 +19,17 @@ export class UserService {
     this.logger.setContext(UserService.name)
   }
 
-  create(createUserDto: CreateUserDto) {
+  create(userDto: CreateUserDto) {
+
+    // 加密处理
+    if(userDto.password){
+      const {salt,hashPasswaord} = this.getPasswaord(userDto.password);
+      userDto.salt = salt;
+      userDto.password = hashPasswaord;
+    }
     // 调用Modle
     // return 'This action adds a 🚀 new user';
-    return this.userRepository.save(createUserDto)
+    return this.userRepository.save(userDto)
   }
 
   async findAll({ pageSize, currentPage }: PaginationParamsDto): Promise<{ data: User[], count: number }> {
@@ -45,10 +53,23 @@ export class UserService {
   }
 
   async update(id: string, user: CreateUserDto) {
+    // 加密处理
+    if(user.password){
+      const {salt,hashPasswaord} = this.getPasswaord(user.password);
+      user.salt = salt;
+      user.password = hashPasswaord;
+    }
     return await this.userRepository.update(id, user)
   }
 
   async remove(id: string): Promise<any> {
     return await this.userRepository.delete(id)
+  }
+
+  // 密码加密
+  getPasswaord(password){
+    const salt = makeSalt();
+    const hashPasswaord = encryptoPassword(password,salt);
+    return {salt,hashPasswaord};
   }
 }

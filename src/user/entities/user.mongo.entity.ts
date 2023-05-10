@@ -1,5 +1,6 @@
 import { Common } from "src/shared/entities/common.entity";
 import { Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { ObjectID } from 'mongodb';
 @Entity()
 export class User extends Common{
     @Column('text')
@@ -10,6 +11,7 @@ export class User extends Common{
 
     @Column()
     @PrimaryGeneratedColumn("uuid")
-    role?:string;
+    
+    role?:ObjectID;
     
 }
